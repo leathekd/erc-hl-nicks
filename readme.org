@@ -1,0 +1,44 @@
+* erc-hl-nicks - ERC Module to Highlight Nicknames
+
+** I already have a nickname highlighter, why should I switch?
+If you're happy with what you're using, you shouldn't.  (If it ain't
+broke...)  BUT, if you are interested in trying something new, here
+are some things you should know:
+- erc-hl-nicks is based on erc-highlight-nicknames, so it will auto
+  colorize nicknames (you don't have to specify colors)
+- erc-hl-nicks will ignore certain characters that IRC servers add to
+  nicknames to avoid duplicates (nickname, nickname', nickname'',
+  etc.)
+- I've only tested this on Emacs 24, but there shouldn't be anything
+  that prevents it from working on 23.
+
+** Installation
+*** Via Marmalade (recommended)
+If you are on Emacs 23, go to marmalade-repo.org and follow the 
+installation instructions there.
+
+If you are on Emacs 24, add Marmalade as a package archive source 
+in ~/.emacs.d/init.el:
+
+#+BEGIN_EXAMPLE
+(require 'package)
+(add-to-list 'package-archives
+             '("marmalade" . "http://marmalade-repo.org/packages/") t)
+(package-initialize)
+#+END_EXAMPLE
+
+Then you can install it:
+
+#+BEGIN_EXAMPLE
+M-x package-refresh-contents
+M-x package-install RET erc-hl-nicks RET
+#+END_EXAMPLE
+
+*** Manually (via git)
+Download the source or clone the repo and add the following 
+to ~/.emacs.d/init.el:
+
+#+BEGIN_EXAMPLE
+(add-to-list 'load-path "path/to/erc-hl-nicks")
+(require 'erc-hl-nicks)
+#+END_EXAMPLE
