@@ -1,7 +1,7 @@
 ;;; erc-hl-nicks.el --- ERC nick highlighter that ignores trailing uniquifying chars when colorizing
-;;
+
 ;; Copyright (C) 2011  David Leatherman
-;;
+
 ;; Author: David Leatherman <leathekd@gmail.com>
 ;; URL: http://www.github.com/leathekd/erc-hl-nicks
 ;; Version: 1.0.0
@@ -15,6 +15,31 @@
 ;;   - re-search for usernames rather than iterate over every word
 ;;   - optionally ignore the trailing uniquifying characters that
 ;;     IRC servers add to nicknames
+
+;; Installation
+;; Via Marmalade (recommended)
+;; If you are on Emacs 23, go to marmalade-repo.org and follow the
+;; installation instructions there.
+
+;; If you are on Emacs 24, add Marmalade as a package archive source
+;; in ~/.emacs.d/init.el
+
+;; (require 'package)
+;; (add-to-list 'package-archives
+;;              '("marmalade" . "http://marmalade-repo.org/packages/") t)
+;; (package-initialize)
+
+;; Then you can install it by running the following
+
+;; M-x package-refresh-contents
+;; M-x package-install RET erc-hl-nicks RET
+
+;; Manually (via git)
+;; Download the source or clone the repo and add the following
+;; to ~/.emacs.d/init.el
+
+;; (add-to-list 'load-path "path/to/erc-hl-nicks")
+;; (require 'erc-hl-nicks)
 
 ;;; License:
 
