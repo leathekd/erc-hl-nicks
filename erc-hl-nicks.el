@@ -113,7 +113,6 @@
   "Get the color to use for the given nick"
   (let ((color (concat "#"
                        (substring (md5 (erc-hl-nicks-prep-nick nick)) 0 12)))
-  "Get the color to use for the given nick"
         (bg-mode (cdr (assoc 'background-mode (frame-parameters)))))
     (cond
      ((and (equal 'dark bg-mode)
@@ -135,7 +134,6 @@
         (puthash nick new-nick-face erc-hl-nicks-face-table))))
 
 (defun erc-hl-highlight-nick (nick)
-  "Search through the file highlighting the given nick"
   "Search through the file highlighting the given nick"
   (save-excursion
     (let ((case-fold-search erc-hl-nicks-ignore-case))
