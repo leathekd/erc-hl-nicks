@@ -151,7 +151,7 @@
   twelve digits of the MD5 message digest of the nickname as
   color (#rrrrggggbbbb)."
   (let ((kw (car keywords)))
-    (when (and kw (not (empty-string-p kw)))
+    (when (and kw (not (equal "" kw)))
       (erc-hl-highlight-nick kw)
       (erc-hl-highlight-nicks (cdr keywords)))))
 
