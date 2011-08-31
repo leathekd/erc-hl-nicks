@@ -103,16 +103,9 @@
       (erc-hl-nicks-trim-irc-nick (substring nick 0 -1))
     nick))
 
-(defun erc-hl-nicks-prep-nick (nick)
-  (let ((nick (downcase nick)))
-    (if erc-hl-nicks-trim-nick-for-face
-        (erc-hl-nicks-trim-irc-nick nick)
-      nick)))
-
 (defun erc-hl-nicks-color-for-nick (nick)
   "Get the color to use for the given nick"
-  (let ((color (concat "#"
-                       (substring (md5 (erc-hl-nicks-prep-nick nick)) 0 12)))
+  (let ((color (concat "#" (substring (md5 (downcase nick)) 0 12)))
         (bg-mode (cdr (assoc 'background-mode (frame-parameters)))))
     (cond
      ((and (equal 'dark bg-mode)
@@ -136,13 +129,21 @@
 (defun erc-hl-nicks-hightlight-nick (nick)
   "Search through the file highlighting the given nick"
   (save-excursion
-    (let ((case-fold-search erc-hl-nicks-ignore-case))
+    (let ((original-nick nick)
+          (nick (if erc-hl-nicks-trim-nick-for-face
+                    (erc-hl-nicks-trim-irc-nick nick)
+                  nick))
+          (case-fold-search erc-hl-nicks-ignore-case))
       (goto-char (point-min))
       (while (search-forward nick nil t)
-        (let ((start (- (point) (length nick)))
-              (end (point))
-              (inhibit-read-only t))
-          (erc-button-add-face start end (erc-hl-nicks-make-face nick)))))))
+        (with-syntax-table erc-button-syntax-table
+          (let ((word (word-at-point))
+                (bounds (bounds-of-thing-at-point 'word))
+                (inhibit-read-only t))
+            (when (or (string= nick word)
+                      (string= original-nick word))
+              (erc-button-add-face (car bounds) (cdr bounds)
+                                   (erc-hl-nicks-make-face nick)))))))))
 
 (defun erc-hl-nicks-hightlight-nicks (nicks)
   "Searches for nicknames and highlights them. Uses the first
