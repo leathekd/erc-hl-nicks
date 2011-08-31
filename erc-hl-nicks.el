@@ -4,42 +4,23 @@
 
 ;; Author: David Leatherman <leathekd@gmail.com>
 ;; URL: http://www.github.com/leathekd/erc-hl-nicks
-;; Version: 1.0.0
+;; Version: 1.0.1
 
 ;; This file is not part of GNU Emacs.
 
 ;;; Commentary:
 
 ;; This file was originally erc-highlight-nicknames.  It was modified
-;; to:
+;; to
 ;;   - re-search for usernames rather than iterate over every word
 ;;   - optionally ignore the trailing uniquifying characters that
 ;;     IRC servers add to nicknames
 
-;; Installation
-;; Via Marmalade (recommended)
-;; If you are on Emacs 23, go to marmalade-repo.org and follow the
-;; installation instructions there.
-
-;; If you are on Emacs 24, add Marmalade as a package archive source
-;; in ~/.emacs.d/init.el
-
-;; (require 'package)
-;; (add-to-list 'package-archives
-;;              '("marmalade" . "http://marmalade-repo.org/packages/") t)
-;; (package-initialize)
-
-;; Then you can install it by running the following
-
-;; M-x package-refresh-contents
-;; M-x package-install RET erc-hl-nicks RET
-
-;; Manually (via git)
-;; Download the source or clone the repo and add the following
-;; to ~/.emacs.d/init.el
-
-;; (add-to-list 'load-path "path/to/erc-hl-nicks")
-;; (require 'erc-hl-nicks)
+;; History
+;; 1.0.0 - initial release
+;; 1.0.1 - tweaked so that the re-search will pick up instances of the
+;;         trimmed nick, settled on 'nick' as the variable name
+;;         instead of kw, keyword, word, etc
 
 ;;; License:
 
@@ -83,7 +64,7 @@
 
 (defface erc-hl-nicks-nick-base-face
   '((t nil))
-  "Base face used for highlighting nicks. (Before the keyword
+  "Base face used for highlighting nicks. (Before the nick
   color is added)"
   :group 'erc-hl-nicks)
 
@@ -117,6 +98,7 @@
             (- 65535 r) (- 65535 g) (- 65535 b))))
 
 (defun erc-hl-nicks-trim-irc-nick (nick)
+  "Removes instances of erc-hl-nicks-ignore-chars from the end of the nick"
   (if (string-match (format "[%s]$" erc-hl-nicks-ignore-chars) nick)
       (erc-hl-nicks-trim-irc-nick (substring nick 0 -1))
     nick))
@@ -131,6 +113,7 @@
   "Get the color to use for the given word"
   (let ((color (concat "#"
                        (substring (md5 (erc-hl-nicks-prep-word word)) 0 12)))
+  "Get the color to use for the given nick"
         (bg-mode (cdr (assoc 'background-mode (frame-parameters)))))
     (cond
      ((and (equal 'dark bg-mode)
@@ -153,6 +136,7 @@
 
 (defun erc-hl-highlight-nick (kw)
   "Search through the file highlighting the given keyword"
+  "Search through the file highlighting the given nick"
   (save-excursion
     (let ((case-fold-search erc-hl-nicks-ignore-case))
       (goto-char (point-min))
@@ -172,6 +156,7 @@
       (erc-hl-highlight-nicks (cdr keywords)))))
 
 (defun erc-hl-nicks-get-nicknames ()
+  "Gets the list of nicknames from the IRC server"
   (erc-with-server-buffer
     (let (nicknames)
       (maphash (lambda (k v) (setq nicknames (cons k nicknames)))
