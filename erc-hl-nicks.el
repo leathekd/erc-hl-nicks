@@ -103,16 +103,16 @@
       (erc-hl-nicks-trim-irc-nick (substring nick 0 -1))
     nick))
 
-(defun erc-hl-nicks-prep-word (word)
-  (let ((word (downcase word)))
+(defun erc-hl-nicks-prep-nick (nick)
+  (let ((nick (downcase nick)))
     (if erc-hl-nicks-trim-nick-for-face
-        (erc-hl-nicks-trim-irc-nick word)
-      word)))
+        (erc-hl-nicks-trim-irc-nick nick)
+      nick)))
 
-(defun erc-hl-nicks-color-for-word (word)
-  "Get the color to use for the given word"
+(defun erc-hl-nicks-color-for-nick (nick)
+  "Get the color to use for the given nick"
   (let ((color (concat "#"
-                       (substring (md5 (erc-hl-nicks-prep-word word)) 0 12)))
+                       (substring (md5 (erc-hl-nicks-prep-nick nick)) 0 12)))
   "Get the color to use for the given nick"
         (bg-mode (cdr (assoc 'background-mode (frame-parameters)))))
     (cond
@@ -124,36 +124,36 @@
       (erc-hl-nicks-invert-color color))
      (t color))))
 
-(defun erc-hl-nicks-make-face (word)
-  "Create and cache a new face for the given word"
-  (or (gethash word erc-hl-nicks-face-table)
-      (let ((color (erc-hl-nicks-color-for-word word))
-            (new-kw-face
-             (make-symbol (concat "erc-hl-nicks-nick-" word "-face"))))
-        (copy-face 'erc-hl-nicks-nick-base-face new-kw-face)
-        (set-face-foreground new-kw-face color)
-        (puthash word new-kw-face erc-hl-nicks-face-table))))
+(defun erc-hl-nicks-make-face (nick)
+  "Create and cache a new face for the given nick"
+  (or (gethash nick erc-hl-nicks-face-table)
+      (let ((color (erc-hl-nicks-color-for-nick nick))
+            (new-nick-face
+             (make-symbol (concat "erc-hl-nicks-nick-" nick "-face"))))
+        (copy-face 'erc-hl-nicks-nick-base-face new-nick-face)
+        (set-face-foreground new-nick-face color)
+        (puthash nick new-nick-face erc-hl-nicks-face-table))))
 
-(defun erc-hl-highlight-nick (kw)
-  "Search through the file highlighting the given keyword"
+(defun erc-hl-highlight-nick (nick)
+  "Search through the file highlighting the given nick"
   "Search through the file highlighting the given nick"
   (save-excursion
     (let ((case-fold-search erc-hl-nicks-ignore-case))
       (goto-char (point-min))
-      (while (search-forward kw nil t)
-        (let ((start (- (point) (length kw)))
+      (while (search-forward nick nil t)
+        (let ((start (- (point) (length nick)))
               (end (point))
               (inhibit-read-only t))
-          (erc-button-add-face start end (erc-hl-nicks-make-face kw)))))))
+          (erc-button-add-face start end (erc-hl-nicks-make-face nick)))))))
 
-(defun erc-hl-highlight-nicks (keywords)
+(defun erc-hl-highlight-nicks (nicks)
   "Searches for nicknames and highlights them. Uses the first
   twelve digits of the MD5 message digest of the nickname as
   color (#rrrrggggbbbb)."
-  (let ((kw (car keywords)))
-    (when (and kw (not (equal "" kw)))
-      (erc-hl-highlight-nick kw)
-      (erc-hl-highlight-nicks (cdr keywords)))))
+  (let ((nick (car nicks)))
+    (when (and nick (not (equal "" nick)))
+      (erc-hl-highlight-nick nick)
+      (erc-hl-highlight-nicks (cdr nicks)))))
 
 (defun erc-hl-nicks-get-nicknames ()
   "Gets the list of nicknames from the IRC server"
