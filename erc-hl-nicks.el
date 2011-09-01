@@ -18,9 +18,13 @@
 
 ;; History
 ;; 1.0.0 - initial release
+
 ;; 1.0.1 - tweaked so that the re-search will pick up instances of the
 ;;         trimmed nick, settled on 'nick' as the variable name
 ;;         instead of kw, keyword, word, etc
+
+;; 1.0.2 - Fixed a recur issue, prevented another, and fixed a
+;;         spelling issue.
 
 ;;; License:
 
@@ -99,9 +103,8 @@
 
 (defun erc-hl-nicks-trim-irc-nick (nick)
   "Removes instances of erc-hl-nicks-ignore-chars from the end of the nick"
-  (if (string-match (format "[%s]$" erc-hl-nicks-ignore-chars) nick)
-      (erc-hl-nicks-trim-irc-nick (substring nick 0 -1))
-    nick))
+  (replace-regexp-in-string
+   (format "\\([%s]\\)+$" erc-hl-nicks-ignore-chars) "" nick))
 
 (defun erc-hl-nicks-color-for-nick (nick)
   "Get the color to use for the given nick"
@@ -126,7 +129,7 @@
         (set-face-foreground new-nick-face color)
         (puthash nick new-nick-face erc-hl-nicks-face-table))))
 
-(defun erc-hl-nicks-hightlight-nick (nick)
+(defun erc-hl-nicks-highlight-nick (nick)
   "Search through the file highlighting the given nick"
   (save-excursion
     (let ((original-nick nick)
@@ -145,14 +148,13 @@
               (erc-button-add-face (car bounds) (cdr bounds)
                                    (erc-hl-nicks-make-face nick)))))))))
 
-(defun erc-hl-nicks-hightlight-nicks (nicks)
+(defun erc-hl-nicks-highlight-nicks (nicks)
   "Searches for nicknames and highlights them. Uses the first
   twelve digits of the MD5 message digest of the nickname as
   color (#rrrrggggbbbb)."
-  (let ((nick (car nicks)))
+  (dolist (nick nicks)
     (when (and nick (not (equal "" nick)))
-      (erc-hl-nicks-hightlight-nick nick)
-      (erc-hl-nicks-hightlight-nicks (cdr nicks)))))
+      (erc-hl-nicks-highlight-nick nick))))
 
 (defun erc-hl-nicks-get-nicknames ()
   "Gets the list of nicknames from the IRC server"
@@ -165,7 +167,7 @@
 ;;;###autoload
 (defun erc-hl-nicks ()
   "Retrieves a list of usernames from the server and highlights them"
-  (erc-hl-nicks-hightlight-nicks (erc-hl-nicks-get-nicknames)))
+  (erc-hl-nicks-highlight-nicks (erc-hl-nicks-get-nicknames)))
 
 (define-erc-module hl-nicks nil
   "Highlight usernames in the buffer"
