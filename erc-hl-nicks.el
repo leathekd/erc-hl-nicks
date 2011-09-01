@@ -4,7 +4,7 @@
 
 ;; Author: David Leatherman <leathekd@gmail.com>
 ;; URL: http://www.github.com/leathekd/erc-hl-nicks
-;; Version: 1.0.1
+;; Version: 1.0.2
 
 ;; This file is not part of GNU Emacs.
 
