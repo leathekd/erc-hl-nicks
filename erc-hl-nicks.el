@@ -12,7 +12,9 @@
 
 ;; This file was originally erc-highlight-nicknames.  It was modified
 ;; to
+
 ;;   - re-search for usernames rather than iterate over every word
+
 ;;   - optionally ignore the trailing uniquifying characters that
 ;;     IRC servers add to nicknames
 
