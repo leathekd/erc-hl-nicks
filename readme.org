@@ -6,7 +6,7 @@ broke...)  BUT, if you are interested in trying something new, here
 are some things you should know:
 - erc-hl-nicks is based on erc-highlight-nicknames, so it will auto
   colorize nicknames (you don't have to specify colors)
-- erc-hl-nicks will ignore certain characters that IRC servers add to
+- erc-hl-nicks will ignore certain characters that IRC clients add to
   nicknames to avoid duplicates (nickname, nickname', nickname'',
   etc.)
 - I've only tested this on Emacs 24, but there shouldn't be anything

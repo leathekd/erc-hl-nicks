@@ -16,17 +16,18 @@
 ;;   - re-search for usernames rather than iterate over every word
 
 ;;   - optionally ignore the trailing uniquifying characters that
-;;     IRC servers add to nicknames
+;;     IRC clients add to nicknames
 
 ;; History
-;; 1.0.0 - initial release
+
+;; 1.0.2 - Fixed a recur issue, prevented another, and fixed a
+;;         spelling issue.
 
 ;; 1.0.1 - tweaked so that the re-search will pick up instances of the
 ;;         trimmed nick, settled on 'nick' as the variable name
 ;;         instead of kw, keyword, word, etc
 
-;; 1.0.2 - Fixed a recur issue, prevented another, and fixed a
-;;         spelling issue.
+;; 1.0.0 - initial release
 
 ;;; License:
 
