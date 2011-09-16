@@ -4,7 +4,7 @@
 
 ;; Author: David Leatherman <leathekd@gmail.com>
 ;; URL: http://www.github.com/leathekd/erc-hl-nicks
-;; Version: 1.0.2
+;; Version: 1.0.3
 
 ;; This file is not part of GNU Emacs.
 
@@ -19,6 +19,9 @@
 ;;     IRC clients add to nicknames
 
 ;; History
+
+;; 1.0.3 - Was finding but not highlighting nicks with differing
+;;         cases.  Fixed.  Doc changes.
 
 ;; 1.0.2 - Fixed a recur issue, prevented another, and fixed a
 ;;         spelling issue.
@@ -146,8 +149,8 @@
           (let ((word (word-at-point))
                 (bounds (bounds-of-thing-at-point 'word))
                 (inhibit-read-only t))
-            (when (or (string= nick word)
-                      (string= original-nick word))
+            (when (or (string= (downcase nick) (downcase word))
+                      (string= (downcase original-nick) (downcase word)))
               (erc-button-add-face (car bounds) (cdr bounds)
                                    (erc-hl-nicks-make-face nick)))))))))
 
