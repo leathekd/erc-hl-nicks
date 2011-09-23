@@ -1,4 +1,4 @@
-;;; erc-hl-nicks.el --- ERC nick highlighter that ignores trailing uniquifying chars when colorizing
+;;; erc-hl-nicks.el --- ERC nick highlighter that ignores uniquifying chars when colorizing
 
 ;; Copyright (C) 2011  David Leatherman
 
@@ -15,7 +15,7 @@
 
 ;;   - re-search for usernames rather than iterate over every word
 
-;;   - optionally ignore the trailing uniquifying characters that
+;;   - optionally ignore the uniquifying characters that
 ;;     IRC clients add to nicknames
 
 ;; History
