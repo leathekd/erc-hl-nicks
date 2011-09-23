@@ -21,7 +21,8 @@
 ;; History
 
 ;; 1.0.3 - Was finding but not highlighting nicks with differing
-;;         cases.  Fixed.  Doc changes.
+;;         cases.  Fixed.  Ignore leading characters, too.
+;;         Doc changes.
 
 ;; 1.0.2 - Fixed a recur issue, prevented another, and fixed a
 ;;         spelling issue.
@@ -109,8 +110,12 @@
 
 (defun erc-hl-nicks-trim-irc-nick (nick)
   "Removes instances of erc-hl-nicks-ignore-chars from the end of the nick"
-  (replace-regexp-in-string
-   (format "\\([%s]\\)+$" erc-hl-nicks-ignore-chars) "" nick))
+  (reduce (lambda (nick regexp)
+            (replace-regexp-in-string
+             (format regexp erc-hl-nicks-ignore-chars)
+             "" nick))
+          '("\\([%s]\\)+$" "^\\([%s]\\)+")
+          :initial-value nick))
 
 (defun erc-hl-nicks-color-for-nick (nick)
   "Get the color to use for the given nick"
