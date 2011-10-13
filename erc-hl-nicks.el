@@ -4,7 +4,7 @@
 
 ;; Author: David Leatherman <leathekd@gmail.com>
 ;; URL: http://www.github.com/leathekd/erc-hl-nicks
-;; Version: 1.0.3
+;; Version: 1.0.4
 
 ;; This file is not part of GNU Emacs.
 
@@ -20,9 +20,11 @@
 
 ;; History
 
+;; 1.0.4 - Use erc-channel-users instead of erc-server-users
+;;       - Ignore leading characters, too.
+
 ;; 1.0.3 - Was finding but not highlighting nicks with differing
-;;         cases.  Fixed.  Ignore leading characters, too.
-;;         Doc changes.
+;;         cases. Fixed. Ignore leading characters, too. Doc changes.
 
 ;; 1.0.2 - Fixed a recur issue, prevented another, and fixed a
 ;;         spelling issue.
@@ -169,10 +171,10 @@
 
 (defun erc-hl-nicks-get-nicknames ()
   "Gets the list of nicknames from the IRC server"
-  (erc-with-server-buffer
+  (when erc-channel-users
     (let (nicknames)
       (maphash (lambda (k v) (setq nicknames (cons k nicknames)))
-               erc-server-users)
+               erc-channel-users)
       nicknames)))
 
 ;;;###autoload
