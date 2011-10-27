@@ -20,6 +20,8 @@
 
 ;; History
 
+;; 1.0.5 - Remove use of cl package (was using 'reduce')
+
 ;; 1.0.4 - Use erc-channel-users instead of erc-server-users
 ;;       - Ignore leading characters, too.
 
@@ -111,13 +113,13 @@
             (- 65535 r) (- 65535 g) (- 65535 b))))
 
 (defun erc-hl-nicks-trim-irc-nick (nick)
-  "Removes instances of erc-hl-nicks-ignore-chars from the end of the nick"
-  (reduce (lambda (nick regexp)
-            (replace-regexp-in-string
-             (format regexp erc-hl-nicks-ignore-chars)
-             "" nick))
-          '("\\([%s]\\)+$" "^\\([%s]\\)+")
-          :initial-value nick))
+  "Removes instances of erc-hl-nicks-ignore-chars from both sides of the nick"
+  (let ((stripped (replace-regexp-in-string
+                   (format "\\([%s]\\)+$" erc-hl-nicks-ignore-chars)
+                   "" nick)))
+    (replace-regexp-in-string
+     (format "^\\([%s]\\)+" erc-hl-nicks-ignore-chars)
+     "" stripped)))
 
 (defun erc-hl-nicks-color-for-nick (nick)
   "Get the color to use for the given nick"
