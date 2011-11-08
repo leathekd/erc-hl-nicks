@@ -151,8 +151,9 @@
         (puthash nick new-nick-face erc-hl-nicks-face-table))))
 
 (defun erc-hl-nicks-highlight-fool-p (nick)
-  (and (member nick erc-fools)
-       erc-hl-nicks-highlight-fools))
+  (if (member nick erc-fools)
+      erc-hl-nicks-highlight-fools
+      t))
 
 ;;;###autoload
 (defun erc-hl-nicks ()
