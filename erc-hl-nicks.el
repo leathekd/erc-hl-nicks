@@ -4,23 +4,24 @@
 
 ;; Author: David Leatherman <leathekd@gmail.com>
 ;; URL: http://www.github.com/leathekd/erc-hl-nicks
-;; Version: 1.0.4
+;; Version: 1.1.0
 
 ;; This file is not part of GNU Emacs.
 
 ;;; Commentary:
 
 ;; This file was originally erc-highlight-nicknames.  It was modified
-;; to
-
-;;   - re-search for usernames rather than iterate over every word
-
-;;   - optionally ignore the uniquifying characters that
-;;     IRC clients add to nicknames
+;; to optionally ignore the uniquifying characters that IRC clients
+;; add to nicknames
 
 ;; History
 
-;; 1.0.5 - Remove use of cl package (was using 'reduce')
+;; 1.1.0 - Remove use of cl package (was using 'reduce').
+;;       - The hook is called with a narrowed buffer, so it makes
+;;         more sense to iterate over each word, one by one.  This
+;;         is more efficient and has a secondary benefit of fixing a
+;;         case issue.
+;;       - Added an option to not highlight fools
 
 ;; 1.0.4 - Use erc-channel-users instead of erc-server-users
 ;;       - Ignore leading characters, too.
@@ -74,6 +75,11 @@
 
 (defcustom erc-hl-nicks-ignore-case nil
   "Ignore case when searching for nicks to highlight"
+  :group 'erc-hl-nicks
+  :type 'boolean)
+
+(defcustom erc-hl-nicks-highlight-fools nil
+  "Don't highlight the nicks for people in the erc-fools list"
   :group 'erc-hl-nicks
   :type 'boolean)
 
@@ -144,45 +150,26 @@
         (set-face-foreground new-nick-face color)
         (puthash nick new-nick-face erc-hl-nicks-face-table))))
 
-(defun erc-hl-nicks-highlight-nick (nick)
-  "Search through the file highlighting the given nick"
-  (save-excursion
-    (let ((original-nick nick)
-          (nick (if erc-hl-nicks-trim-nick-for-face
-                    (erc-hl-nicks-trim-irc-nick nick)
-                  nick))
-          (case-fold-search erc-hl-nicks-ignore-case))
-      (goto-char (point-min))
-      (while (search-forward nick nil t)
-        (with-syntax-table erc-button-syntax-table
-          (let ((word (word-at-point))
-                (bounds (bounds-of-thing-at-point 'word))
-                (inhibit-read-only t))
-            (when (or (string= (downcase nick) (downcase word))
-                      (string= (downcase original-nick) (downcase word)))
-              (erc-button-add-face (car bounds) (cdr bounds)
-                                   (erc-hl-nicks-make-face nick)))))))))
-
-(defun erc-hl-nicks-highlight-nicks (nicks)
-  "Searches for nicknames and highlights them. Uses the first
-  twelve digits of the MD5 message digest of the nickname as
-  color (#rrrrggggbbbb)."
-  (dolist (nick nicks)
-    (when (and nick (not (equal "" nick)))
-      (erc-hl-nicks-highlight-nick nick))))
-
-(defun erc-hl-nicks-get-nicknames ()
-  "Gets the list of nicknames from the IRC server"
-  (when erc-channel-users
-    (let (nicknames)
-      (maphash (lambda (k v) (setq nicknames (cons k nicknames)))
-               erc-channel-users)
-      nicknames)))
+(defun erc-hl-nicks-highlight-fool-p (nick)
+  (and (member nick erc-fools)
+       erc-hl-nicks-highlight-fools))
 
 ;;;###autoload
 (defun erc-hl-nicks ()
   "Retrieves a list of usernames from the server and highlights them"
-  (erc-hl-nicks-highlight-nicks (erc-hl-nicks-get-nicknames)))
+  (save-excursion
+    (with-syntax-table erc-button-syntax-table
+      (goto-char (point-min))
+      (while (forward-word 1)
+        (let* ((word (word-at-point))
+               (trimmed (erc-hl-nicks-trim-irc-nick word))
+               (bounds (bounds-of-thing-at-point 'word))
+               (inhibit-read-only t))
+          (when (and erc-channel-users
+                     (erc-get-channel-user word)
+                     (erc-hl-nicks-highlight-fool-p trimmed))
+            (erc-button-add-face (car bounds) (cdr bounds)
+                                 (erc-hl-nicks-make-face trimmed))))))))
 
 (define-erc-module hl-nicks nil
   "Highlight usernames in the buffer"
