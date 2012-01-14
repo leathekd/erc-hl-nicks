@@ -193,23 +193,29 @@
             (erc-button-add-face (car bounds) (cdr bounds)
                                  (erc-hl-nicks-make-face trimmed))))))))
 
+(defun erc-hl-nicks-fix-hook-order (&rest _)
+  (remove-hook 'erc-insert-modify-hook 'erc-hl-nicks)
+  (add-hook 'erc-insert-modify-hook 'erc-hl-nicks t))
+
 (define-erc-module hl-nicks nil
   "Highlight usernames in the buffer"
-  ((add-hook 'erc-insert-modify-hook 'erc-hl-nicks t))
-  ((remove-hook 'erc-insert-modify-hook 'erc-hl-nicks)))
+  ((add-hook 'erc-insert-modify-hook 'erc-hl-nicks t)
+   (add-hook 'erc-connect-pre-hook 'erc-hl-nicks-fix-hook-order t))
+  ((remove-hook 'erc-insert-modify-hook 'erc-hl-nicks)
+   (remove-hook 'erc-connect-pre-hook 'erc-hl-nicks-fix-hook-order)))
 
 ;;;###autoload
 (eval-after-load 'erc '(add-to-list 'erc-modules 'hl-nicks t))
 
-(eval-after-load 'erc-match
-  '(progn
-     ;; Not sure this is needed, but move hl-nicks to the end
-     (delete 'hl-nicks erc-modules)
-     (add-to-list 'erc-modules 'hl-nicks t)
+;; (eval-after-load 'erc-match
+;;   '(progn
+;;      ;; Not sure this is needed, but move hl-nicks to the end
+;;      (delete 'hl-nicks erc-modules)
+;;      (add-to-list 'erc-modules 'hl-nicks t)
 
-     ;; move hl-nicks to the end
-     (remove-hook 'erc-insert-modify-hook 'erc-hl-nicks)
-     (add-hook 'erc-insert-modify-hook 'erc-hl-nicks t)))
+;;      ;; move hl-nicks to the end
+;;      (remove-hook 'erc-insert-modify-hook 'erc-hl-nicks)
+;;      (add-hook 'erc-insert-modify-hook 'erc-hl-nicks t)))
 
 ;; For first time use
 ;;;###autoload
