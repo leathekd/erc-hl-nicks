@@ -180,13 +180,6 @@
 ;;;###autoload
 (defun erc-hl-nicks ()
   "Retrieves a list of usernames from the server and highlights them"
-  (let ((contents (format "contents: %s" (buffer-substring (point-min)
-                                                           (point-max)))))
-    (with-current-buffer (get-buffer-create "erc-hl-nicks-logging")
-      (save-excursion
-        (goto-char (point-max))
-        (insert contents))))
-
   (save-excursion
     (with-syntax-table erc-button-syntax-table
       (goto-char (point-min))
