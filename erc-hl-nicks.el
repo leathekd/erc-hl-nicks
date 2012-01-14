@@ -86,13 +86,13 @@
 (defcustom erc-hl-nicks-skip-nicks nil
   "Nicks to skip when highlighting"
   :group 'erc-hl-nicks
-  :type 'list)
+  :type '(repeat string))
 
 (defcustom erc-hl-nicks-skip-faces
-  '(erc-notice-face erc-pal-face erc-fool-face)
+  '("erc-notice-face" "erc-pal-face" "erc-fool-face")
   "Faces to avoid overriding when highlighting"
   :group 'erc-hl-nicks
-  :type 'list)
+  :type  '(repeat string))
 
 (defface erc-hl-nicks-nick-base-face
   '((t nil))
@@ -173,7 +173,8 @@
   (and erc-channel-users
        (erc-get-channel-user nick)
        (not (member trimmed erc-hl-nicks-skip-nicks))
-       (not (some (lambda (face) (member face erc-hl-nicks-skip-faces))
+       (not (some (lambda (face) (member (symbol-name face)
+                                    erc-hl-nicks-skip-faces))
                   (erc-hl-nicks-ensure-list
                    (get-text-property (car bounds) 'face))))))
 
