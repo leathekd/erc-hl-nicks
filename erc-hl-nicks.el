@@ -4,7 +4,7 @@
 
 ;; Author: David Leatherman <leathekd@gmail.com>
 ;; URL: http://www.github.com/leathekd/erc-hl-nicks
-;; Version: 1.1.0
+;; Version: 1.2.0
 
 ;; This file is not part of GNU Emacs.
 
@@ -16,14 +16,24 @@
 
 ;; History
 
+;; 1.2.0 - Added erc-hl-nicks-skip-nicks to give a way to prevent
+;;         certain nicks from being highlighted.
+;;
+;;       - Added erc-hl-nicks-skip-faces to give a way to prevent
+;;         highlighting over other faces.  Defaults to:
+;;         (erc-notice-face erc-fool-face erc-pal-face)
+
 ;; 1.1.0 - Remove use of cl package (was using 'reduce').
+;;
 ;;       - The hook is called with a narrowed buffer, so it makes
 ;;         more sense to iterate over each word, one by one.  This
 ;;         is more efficient and has a secondary benefit of fixing a
 ;;         case issue.
+;;
 ;;       - Added an option to not highlight fools
 
 ;; 1.0.4 - Use erc-channel-users instead of erc-server-users
+;;
 ;;       - Ignore leading characters, too.
 
 ;; 1.0.3 - Was finding but not highlighting nicks with differing
@@ -73,15 +83,16 @@
   :group 'erc-hl-nicks
   :type 'string)
 
-(defcustom erc-hl-nicks-ignore-case nil
-  "Ignore case when searching for nicks to highlight"
+(defcustom erc-hl-nicks-skip-nicks nil
+  "Nicks to skip when highlighting"
   :group 'erc-hl-nicks
-  :type 'boolean)
+  :type '(repeat string))
 
-(defcustom erc-hl-nicks-highlight-fools nil
-  "Don't highlight the nicks for people in the erc-fools list"
+(defcustom erc-hl-nicks-skip-faces
+  '("erc-notice-face" "erc-pal-face" "erc-fool-face")
+  "Faces to avoid overriding when highlighting"
   :group 'erc-hl-nicks
-  :type 'boolean)
+  :type  '(repeat string))
 
 (defface erc-hl-nicks-nick-base-face
   '((t nil))
@@ -140,20 +151,32 @@
       (erc-hl-nicks-invert-color color))
      (t color))))
 
+(defun erc-hl-nicks-face-name (nick)
+  (make-symbol (concat "erc-hl-nicks-nick-" nick "-face")))
+
 (defun erc-hl-nicks-make-face (nick)
   "Create and cache a new face for the given nick"
   (or (gethash nick erc-hl-nicks-face-table)
       (let ((color (erc-hl-nicks-color-for-nick nick))
             (new-nick-face
-             (make-symbol (concat "erc-hl-nicks-nick-" nick "-face"))))
+             (erc-hl-nicks-face-name nick)))
         (copy-face 'erc-hl-nicks-nick-base-face new-nick-face)
         (set-face-foreground new-nick-face color)
         (puthash nick new-nick-face erc-hl-nicks-face-table))))
 
-(defun erc-hl-nicks-highlight-fool-p (nick)
-  (if (member nick erc-fools)
-      erc-hl-nicks-highlight-fools
-      t))
+(defun erc-hl-nicks-ensure-list (maybe-list)
+  (if (listp maybe-list)
+      maybe-list
+    (list maybe-list)))
+
+(defun erc-hl-nicks-highlight-p (nick trimmed bounds)
+  (and erc-channel-users
+       (erc-get-channel-user nick)
+       (not (member trimmed erc-hl-nicks-skip-nicks))
+       (not (some (lambda (face) (member (symbol-name face)
+                                    erc-hl-nicks-skip-faces))
+                  (erc-hl-nicks-ensure-list
+                   (get-text-property (car bounds) 'face))))))
 
 ;;;###autoload
 (defun erc-hl-nicks ()
@@ -166,19 +189,33 @@
                (trimmed (erc-hl-nicks-trim-irc-nick word))
                (bounds (bounds-of-thing-at-point 'word))
                (inhibit-read-only t))
-          (when (and erc-channel-users
-                     (erc-get-channel-user word)
-                     (erc-hl-nicks-highlight-fool-p trimmed))
+          (when (erc-hl-nicks-highlight-p word trimmed bounds)
             (erc-button-add-face (car bounds) (cdr bounds)
                                  (erc-hl-nicks-make-face trimmed))))))))
 
+(defun erc-hl-nicks-fix-hook-order (&rest _)
+  (remove-hook 'erc-insert-modify-hook 'erc-hl-nicks)
+  (add-hook 'erc-insert-modify-hook 'erc-hl-nicks t))
+
 (define-erc-module hl-nicks nil
   "Highlight usernames in the buffer"
-  ((add-hook 'erc-insert-modify-hook 'erc-hl-nicks t))
-  ((remove-hook 'erc-insert-modify-hook 'erc-hl-nicks)))
+  ((add-hook 'erc-insert-modify-hook 'erc-hl-nicks t)
+   (add-hook 'erc-connect-pre-hook 'erc-hl-nicks-fix-hook-order t))
+  ((remove-hook 'erc-insert-modify-hook 'erc-hl-nicks)
+   (remove-hook 'erc-connect-pre-hook 'erc-hl-nicks-fix-hook-order)))
 
 ;;;###autoload
-(eval-after-load 'erc '(add-to-list 'erc-modules 'hl-nicks))
+(eval-after-load 'erc '(add-to-list 'erc-modules 'hl-nicks t))
+
+;; (eval-after-load 'erc-match
+;;   '(progn
+;;      ;; Not sure this is needed, but move hl-nicks to the end
+;;      (delete 'hl-nicks erc-modules)
+;;      (add-to-list 'erc-modules 'hl-nicks t)
+
+;;      ;; move hl-nicks to the end
+;;      (remove-hook 'erc-insert-modify-hook 'erc-hl-nicks)
+;;      (add-hook 'erc-insert-modify-hook 'erc-hl-nicks t)))
 
 ;; For first time use
 ;;;###autoload
