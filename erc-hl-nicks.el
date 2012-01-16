@@ -4,7 +4,7 @@
 
 ;; Author: David Leatherman <leathekd@gmail.com>
 ;; URL: http://www.github.com/leathekd/erc-hl-nicks
-;; Version: 1.2.0
+;; Version: 1.2.1
 
 ;; This file is not part of GNU Emacs.
 
@@ -15,6 +15,8 @@
 ;; add to nicknames
 
 ;; History
+
+;; 1.2.1 - Remove accidental use of 'some' which comes from cl
 
 ;; 1.2.0 - Added erc-hl-nicks-skip-nicks to give a way to prevent
 ;;         certain nicks from being highlighted.
@@ -169,14 +171,17 @@
       maybe-list
     (list maybe-list)))
 
+(defun erc-hl-nicks-has-skip-face-p (pt)
+  (remq nil (mapcar (lambda (face) (member (symbol-name face)
+                                      erc-hl-nicks-skip-faces))
+                    (erc-hl-nicks-ensure-list
+                     (get-text-property pt 'face)))))
+
 (defun erc-hl-nicks-highlight-p (nick trimmed bounds)
   (and erc-channel-users
        (erc-get-channel-user nick)
        (not (member trimmed erc-hl-nicks-skip-nicks))
-       (not (some (lambda (face) (member (symbol-name face)
-                                    erc-hl-nicks-skip-faces))
-                  (erc-hl-nicks-ensure-list
-                   (get-text-property (car bounds) 'face))))))
+       (not (erc-hl-nicks-has-skip-face-p (car bounds)))))
 
 ;;;###autoload
 (defun erc-hl-nicks ()
