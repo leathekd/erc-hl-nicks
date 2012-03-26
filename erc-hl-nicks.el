@@ -4,7 +4,7 @@
 
 ;; Author: David Leatherman <leathekd@gmail.com>
 ;; URL: http://www.github.com/leathekd/erc-hl-nicks
-;; Version: 1.2.1
+;; Version: 1.2.2
 
 ;; This file is not part of GNU Emacs.
 
@@ -16,6 +16,7 @@
 
 ;; History
 
+;; 1.2.2 - Added dash to the list of characters to ignore
 ;; 1.2.1 - Remove accidental use of 'some' which comes from cl
 
 ;; 1.2.0 - Added erc-hl-nicks-skip-nicks to give a way to prevent
@@ -80,7 +81,7 @@
   :group 'erc-hl-nicks
   :type 'boolean)
 
-(defcustom erc-hl-nicks-ignore-chars ",`'_"
+(defcustom erc-hl-nicks-ignore-chars ",`'_-"
   "Characters at the end of a nick to ignore while highlighting"
   :group 'erc-hl-nicks
   :type 'string)
