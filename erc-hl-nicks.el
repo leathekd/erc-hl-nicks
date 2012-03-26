@@ -17,6 +17,10 @@
 ;; History
 
 ;; 1.2.2 - Added dash to the list of characters to ignore
+;;
+;;       - Fixed an issue where timestamps could prevent highlighting
+;;         from occurring
+
 ;; 1.2.1 - Remove accidental use of 'some' which comes from cl
 
 ;; 1.2.0 - Added erc-hl-nicks-skip-nicks to give a way to prevent
@@ -189,15 +193,16 @@
   "Retrieves a list of usernames from the server and highlights them"
   (save-excursion
     (with-syntax-table erc-button-syntax-table
-      (goto-char (point-min))
-      (while (forward-word 1)
-        (let* ((word (word-at-point))
-               (trimmed (erc-hl-nicks-trim-irc-nick word))
-               (bounds (bounds-of-thing-at-point 'word))
-               (inhibit-read-only t))
-          (when (erc-hl-nicks-highlight-p word trimmed bounds)
-            (erc-button-add-face (car bounds) (cdr bounds)
-                                 (erc-hl-nicks-make-face trimmed))))))))
+     (let ((inhibit-field-text-motion t))
+       (goto-char (point-min))
+       (while (forward-word 1)
+         (let* ((word (word-at-point))
+                (trimmed (erc-hl-nicks-trim-irc-nick word))
+                (bounds (bounds-of-thing-at-point 'word))
+                (inhibit-read-only t))
+           (when (erc-hl-nicks-highlight-p word trimmed bounds)
+             (erc-button-add-face (car bounds) (cdr bounds)
+                                  (erc-hl-nicks-make-face trimmed)))))))))
 
 (defun erc-hl-nicks-fix-hook-order (&rest _)
   (remove-hook 'erc-insert-modify-hook 'erc-hl-nicks)
