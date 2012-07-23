@@ -1,6 +1,6 @@
 ;;; erc-hl-nicks.el --- ERC nick highlighter that ignores uniquifying chars when colorizing
 
-;; Copyright (C) 2011  David Leatherman
+;; Copyright (C) 2011-2012  David Leatherman
 
 ;; Author: David Leatherman <leathekd@gmail.com>
 ;; URL: http://www.github.com/leathekd/erc-hl-nicks
