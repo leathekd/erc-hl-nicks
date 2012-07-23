@@ -4,7 +4,7 @@
 
 ;; Author: David Leatherman <leathekd@gmail.com>
 ;; URL: http://www.github.com/leathekd/erc-hl-nicks
-;; Version: 1.2.2
+;; Version: 1.2.3
 
 ;; This file is not part of GNU Emacs.
 
@@ -15,6 +15,12 @@
 ;; add to nicknames
 
 ;; History
+
+;; 1.2.3 - Updated copyright date
+;;
+;;       - Updated some formatting
+;;
+;;       - added highlighting on erc-send-modify-hook
 
 ;; 1.2.2 - Added dash to the list of characters to ignore
 ;;
