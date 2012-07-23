@@ -210,8 +210,10 @@
 (define-erc-module hl-nicks nil
   "Highlight usernames in the buffer"
   ((add-hook 'erc-insert-modify-hook 'erc-hl-nicks t)
+   (add-hook 'erc-send-modify-hook 'erc-hl-nicks t)
    (add-hook 'erc-connect-pre-hook 'erc-hl-nicks-fix-hook-order t))
   ((remove-hook 'erc-insert-modify-hook 'erc-hl-nicks)
+   (remove-hook 'erc-send-modify-hook 'erc-hl-nicks)
    (remove-hook 'erc-connect-pre-hook 'erc-hl-nicks-fix-hook-order)))
 
 ;;;###autoload
