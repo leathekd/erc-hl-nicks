@@ -165,8 +165,7 @@
   "Create and cache a new face for the given nick"
   (or (gethash nick erc-hl-nicks-face-table)
       (let ((color (erc-hl-nicks-color-for-nick nick))
-            (new-nick-face
-             (erc-hl-nicks-face-name nick)))
+            (new-nick-face (erc-hl-nicks-face-name nick)))
         (copy-face 'erc-hl-nicks-nick-base-face new-nick-face)
         (set-face-foreground new-nick-face color)
         (puthash nick new-nick-face erc-hl-nicks-face-table))))
@@ -177,8 +176,8 @@
     (list maybe-list)))
 
 (defun erc-hl-nicks-has-skip-face-p (pt)
-  (remq nil (mapcar (lambda (face) (member (symbol-name face)
-                                      erc-hl-nicks-skip-faces))
+  (remq nil (mapcar (lambda (face)
+                      (member (symbol-name face) erc-hl-nicks-skip-faces))
                     (erc-hl-nicks-ensure-list
                      (get-text-property pt 'face)))))
 
@@ -193,16 +192,16 @@
   "Retrieves a list of usernames from the server and highlights them"
   (save-excursion
     (with-syntax-table erc-button-syntax-table
-     (let ((inhibit-field-text-motion t))
-       (goto-char (point-min))
-       (while (forward-word 1)
-         (let* ((word (word-at-point))
-                (trimmed (erc-hl-nicks-trim-irc-nick word))
-                (bounds (bounds-of-thing-at-point 'word))
-                (inhibit-read-only t))
-           (when (erc-hl-nicks-highlight-p word trimmed bounds)
-             (erc-button-add-face (car bounds) (cdr bounds)
-                                  (erc-hl-nicks-make-face trimmed)))))))))
+      (let ((inhibit-field-text-motion t))
+        (goto-char (point-min))
+        (while (forward-word 1)
+          (let* ((word (word-at-point))
+                 (trimmed (erc-hl-nicks-trim-irc-nick word))
+                 (bounds (bounds-of-thing-at-point 'word))
+                 (inhibit-read-only t))
+            (when (erc-hl-nicks-highlight-p word trimmed bounds)
+              (erc-button-add-face (car bounds) (cdr bounds)
+                                   (erc-hl-nicks-make-face trimmed)))))))))
 
 (defun erc-hl-nicks-fix-hook-order (&rest _)
   (remove-hook 'erc-insert-modify-hook 'erc-hl-nicks)
