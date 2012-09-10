@@ -205,7 +205,9 @@
 
 (defun erc-hl-nicks-fix-hook-order (&rest _)
   (remove-hook 'erc-insert-modify-hook 'erc-hl-nicks)
-  (add-hook 'erc-insert-modify-hook 'erc-hl-nicks t))
+  (add-hook 'erc-insert-modify-hook 'erc-hl-nicks t)
+  (remove-hook 'erc-send-modify-hook 'erc-hl-nicks)
+  (add-hook 'erc-send-modify-hook 'erc-hl-nicks t))
 
 (define-erc-module hl-nicks nil
   "Highlight usernames in the buffer"
