@@ -113,6 +113,8 @@
   color is added)"
   :group 'erc-hl-nicks)
 
+(defvar erc-hl-nicks-minimum-contrast-ratio 4.5)
+
 (defvar erc-hl-nicks-face-table
   (make-hash-table :test 'equal)
   "The hash table that contains unique nick faces.")
@@ -164,13 +166,36 @@
       (erc-hl-nicks-invert-color color))
      (t color))))
 
+(defun erc-hl-nicks-brightness-contrast (c1 c2)
+  (let* ((l1 (erc-hl-nicks-hexcolor-luminance c1))
+         (l2 (erc-hl-nicks-hexcolor-luminance c2))
+         (d (if (< l1 l2) l1 l2))
+         (b (if (equal d l1) l2 l1)))
+    (/ (+ 0.05 b) (+ 0.05 d))))
+
+(defun erc-hl-nicks-fix-color-contrast (nick-color)
+  (some
+   (lambda (c)
+     (let ((hex (color-rgb-to-hex (nth 0 c) (nth 1 c) (nth 2 c))))
+       (when (> (erc-hl-nicks-brightness-contrast
+                 (cdr (assoc 'background-color (frame-parameters))) hex)
+                erc-hl-nicks-minimum-contrast-ratio)
+         hex)))
+   (let ((bg-mode (cdr (assoc 'background-mode (frame-parameters)))))
+     (color-gradient
+      (color-name-to-rgb nick-color)
+      (color-name-to-rgb
+       (if (equal 'dark bg-mode) "white" "black"))
+      100))))
+
 (defun erc-hl-nicks-face-name (nick)
   (make-symbol (concat "erc-hl-nicks-nick-" nick "-face")))
 
 (defun erc-hl-nicks-make-face (nick)
   "Create and cache a new face for the given nick"
   (or (gethash nick erc-hl-nicks-face-table)
-      (let ((color (erc-hl-nicks-color-for-nick nick))
+      (let ((color (erc-hl-nicks-fix-color-contrast
+                    (erc-hl-nicks-color-for-nick nick)))
             (new-nick-face (erc-hl-nicks-face-name nick)))
         (copy-face 'erc-hl-nicks-nick-base-face new-nick-face)
         (set-face-foreground new-nick-face color)
