@@ -194,6 +194,23 @@
        (not (erc-hl-nicks-has-skip-face-p (car bounds)))))
 
 ;;;###autoload
+(defun erc-hl-nicks-force-nick-face (nick color)
+  "Force nick highlighting to be a certain color for a nick. Both NICK and COLOR
+  should be strings."
+  (let ((new-nick-face (erc-hl-nicks-face-name nick)))
+    (copy-face 'erc-hl-nicks-nick-base-face new-nick-face)
+    (set-face-foreground new-nick-face color)
+    (puthash nick new-nick-face erc-hl-nicks-face-table)))
+
+;;;###autoload
+(defun erc-hl-nicks-alias-nick (nick &rest nick-aliases)
+  "Manually handle the really wacked out nickname transformations."
+  (erc-hl-nicks-make-face nick)
+  (let ((nick-face (gethash nick erc-hl-nicks-face-table)))
+    (dolist (nick-alias nick-aliases)
+      (puthash nick-alias nick-face erc-hl-nicks-face-table))))
+
+;;;###autoload
 (defun erc-hl-nicks ()
   "Retrieves a list of usernames from the server and highlights them"
   (save-excursion
