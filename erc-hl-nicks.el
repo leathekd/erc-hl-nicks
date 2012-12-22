@@ -81,6 +81,8 @@
 ;;; Code:
 (require 'erc)
 (require 'erc-button)
+(eval-when-compile
+  (require 'cl))
 
 (defgroup erc-hl-nicks nil
   "Highlighting nicknames in erc buffers"
