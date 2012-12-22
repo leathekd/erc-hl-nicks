@@ -179,7 +179,7 @@
             (- 65535 r) (- 65535 g) (- 65535 b))))
 
 (defun erc-hl-nicks-trim-irc-nick (nick)
-  "Removes instances of erc-hl-nicks-ignore-chars from both sides of the nick"
+  "Removes instances of erc-hl-nicks-ignore-chars from both sides of NICK"
   (let ((stripped (replace-regexp-in-string
                    (format "\\([%s]\\)+$" erc-hl-nicks-ignore-chars)
                    "" nick)))
@@ -188,6 +188,7 @@
      "" stripped)))
 
 (defun erc-hl-nicks-brightness-contrast (c1 c2)
+  "Determines the amount of contrast between C1 and C2"
   (let* ((l1 (erc-hl-nicks-hexcolor-luminance c1))
          (l2 (erc-hl-nicks-hexcolor-luminance c2))
          (d (if (< l1 l2) l1 l2))
