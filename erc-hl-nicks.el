@@ -122,6 +122,11 @@
 (defvar erc-hl-nicks-maximum-luminence 170
   "The threshold to invert when the background-mode is light")
 
+(defvar erc-hl-nicks-bg-color (cdr (assoc 'background-color (frame-parameters)))
+  "The background color to use when calculating the contrast. This var is
+  exposed so it can be manually set in the case of terminal emacs (which doesn't
+  necessarily know the bg color).")
+
 (defvar erc-hl-nicks-minimum-contrast-ratio 3.5
   "The amount of contrast desired between the buffer background color
   and the foreground color chosen by erc-hl-nicks. The higher the
@@ -206,8 +211,7 @@
       (some
        (lambda (c)
          (let ((hex (color-rgb-to-hex (nth 0 c) (nth 1 c) (nth 2 c))))
-           (when (> (erc-hl-nicks-brightness-contrast
-                     (cdr (assoc 'background-color (frame-parameters))) hex)
+           (when (> (erc-hl-nicks-brightness-contrast erc-hl-nicks-bg-color hex)
                     erc-hl-nicks-minimum-contrast-ratio)
              hex)))
        (let ((bg-mode (cdr (assoc 'background-mode (frame-parameters)))))
