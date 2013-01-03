@@ -331,16 +331,6 @@
 ;;;###autoload
 (eval-after-load 'erc '(add-to-list 'erc-modules 'hl-nicks t))
 
-;; (eval-after-load 'erc-match
-;;   '(progn
-;;      ;; Not sure this is needed, but move hl-nicks to the end
-;;      (delete 'hl-nicks erc-modules)
-;;      (add-to-list 'erc-modules 'hl-nicks t)
-
-;;      ;; move hl-nicks to the end
-;;      (remove-hook 'erc-insert-modify-hook 'erc-hl-nicks)
-;;      (add-hook 'erc-insert-modify-hook 'erc-hl-nicks t)))
-
 ;; For first time use
 ;;;###autoload
 (when (and (boundp 'erc-modules)
