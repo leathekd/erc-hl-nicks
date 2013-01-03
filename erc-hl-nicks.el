@@ -161,6 +161,7 @@
 
 ;; for debugging
 (defun erc-hl-nicks-reset-face-table ()
+  (interactive)
   (setq erc-hl-nicks-face-table
         (make-hash-table :test 'equal)))
 
