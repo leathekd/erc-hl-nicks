@@ -328,9 +328,6 @@
    (remove-hook 'erc-send-modify-hook 'erc-hl-nicks)
    (remove-hook 'erc-connect-pre-hook 'erc-hl-nicks-fix-hook-order)))
 
-;;;###autoload
-(eval-after-load 'erc '(add-to-list 'erc-modules 'hl-nicks t))
-
 ;; For first time use
 ;;;###autoload
 (when (and (boundp 'erc-modules)
@@ -338,4 +335,11 @@
   (add-to-list 'erc-modules 'hl-nicks))
 
 (provide 'erc-hl-nicks)
+
+;;;###autoload
+(eval-after-load 'erc
+  '(progn
+     (unless (featurep 'erc-hl-nicks (require 'erc-hl-nicks)))
+     (add-to-list 'erc-modules 'hl-nicks t)))
+
 ;;; erc-hl-nicks.el ends here
