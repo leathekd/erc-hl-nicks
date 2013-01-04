@@ -4,7 +4,7 @@
 
 ;; Author: David Leatherman <leathekd@gmail.com>
 ;; URL: http://www.github.com/leathekd/erc-hl-nicks
-;; Version: 1.2.4
+;; Version: 1.3.0
 
 ;; This file is not part of GNU Emacs.
 
@@ -16,9 +16,24 @@
 
 ;; History
 
-;; 1.2.4 - Fix autoloads - erc-hl-nicks should require itself as needed
+;; 1.3.0 (was uploaded as 1.2.4, accidentally)
 ;;
-;;       - reset face table is now interactive
+;; - Fix autoloads - erc-hl-nicks should require itself as needed
+;;
+;; - reset face table is now interactive
+;;
+;; - reworked how colors are chosen (should continue to work the same
+;;   for everyone, though). See `erc-hl-nicks-color-contrast-strategy'
+;;   for details.
+;;
+;; - Added `erc-hl-nicks-bg-color' to allow terminal users to specify
+;;   their background colors
+;;
+;; - Added `erc-hl-nicks-alias-nick' to allow setting up several nicks
+;;   to use the same color
+;;
+;; - Added `erc-hl-nicks-force-nick-face' to force a nick to use a
+;;   specific color
 
 ;; 1.2.3 - Updated copyright date
 ;;
