@@ -4,7 +4,7 @@
 
 ;; Author: David Leatherman <leathekd@gmail.com>
 ;; URL: http://www.github.com/leathekd/erc-hl-nicks
-;; Version: 1.2.3
+;; Version: 1.2.4
 
 ;; This file is not part of GNU Emacs.
 
@@ -15,6 +15,10 @@
 ;; add to nicknames
 
 ;; History
+
+;; 1.2.4 - Fix autoloads - erc-hl-nicks should require itself as needed
+;;
+;;       - reset face table is now interactive
 
 ;; 1.2.3 - Updated copyright date
 ;;
