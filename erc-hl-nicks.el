@@ -100,8 +100,7 @@
 ;;; Code:
 (require 'erc)
 (require 'erc-button)
-(eval-when-compile
-  (require 'cl))
+(require 'cl)
 (require 'color)
 
 (defgroup erc-hl-nicks nil
