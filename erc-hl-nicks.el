@@ -358,7 +358,8 @@
 ;;;###autoload
 (eval-after-load 'erc
   '(progn
-     (unless (featurep 'erc-hl-nicks (require 'erc-hl-nicks)))
+     (unless (featurep 'erc-hl-nicks)
+       (require 'erc-hl-nicks))
      (add-to-list 'erc-modules 'hl-nicks t)))
 
 ;;; erc-hl-nicks.el ends here
