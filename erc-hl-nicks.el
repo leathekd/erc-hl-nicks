@@ -1,10 +1,10 @@
 ;;; erc-hl-nicks.el --- ERC nick highlighter that ignores uniquifying chars when colorizing
 
-;; Copyright (C) 2011-2012  David Leatherman
+;; Copyright (C) 2011-2013  David Leatherman
 
 ;; Author: David Leatherman <leathekd@gmail.com>
 ;; URL: http://www.github.com/leathekd/erc-hl-nicks
-;; Version: 1.3.0
+;; Version: 1.3.1
 
 ;; This file is not part of GNU Emacs.
 
@@ -15,6 +15,10 @@
 ;; add to nicknames
 
 ;; History
+
+;; 1.3.1
+;;
+;; - Fix a require issue
 
 ;; 1.3.0 (was uploaded as 1.2.4, accidentally)
 ;;
