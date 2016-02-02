@@ -9,21 +9,29 @@ are some things you should know:
 - erc-hl-nicks will ignore certain characters that IRC clients add to
   nicknames to avoid duplicates (nickname, nickname', nickname'',
   etc.)
-- I've only tested this on Emacs 24, but there shouldn't be anything
-  that prevents it from working on 23.
+- erc-hl-nicks can attempt to produce colors with a sufficient amount
+  of contrast between the nick color and the background color.
 
 ** Installation
-*** Via Marmalade (recommended)
-If you are on Emacs 23, go to marmalade-repo.org and follow the 
-installation instructions there.
-
-If you are on Emacs 24, add Marmalade as a package archive source 
-in ~/.emacs.d/init.el:
+*** Via Package (recommended)
+Pick your favorite package archive- I do try to keep this package
+up-to-date on Marmalade and it is also available via Mepla and
+Melpa-stable.
 
 #+BEGIN_EXAMPLE
 (require 'package)
+
 (add-to-list 'package-archives
-             '("marmalade" . "http://marmalade-repo.org/packages/") t)
+             '("melpa" . "http://melpa.org/packages/") t)
+
+;; Either of these will work, as well.
+
+;; (add-to-list 'package-archives
+;;              '("marmalade" . "http://marmalade-repo.org/packages/") t)
+
+;; (add-to-list 'package-archives
+;;              '("melpa-stable" . "http://stable.melpa.org/packages/") t)
+
 (package-initialize)
 #+END_EXAMPLE
 

@@ -4,7 +4,7 @@
 
 ;; Author: David Leatherman <leathekd@gmail.com>
 ;; URL: http://www.github.com/leathekd/erc-hl-nicks
-;; Version: 1.3.1
+;; Version: 1.3.2
 
 ;; This file is not part of GNU Emacs.
 
@@ -15,6 +15,10 @@
 ;; add to nicknames
 
 ;; History
+
+;; 1.3.2
+;;
+;; - Pull request #7 - remove the list membership check on autoload
 
 ;; 1.3.1
 ;;
