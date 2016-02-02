@@ -354,7 +354,7 @@
 ;; For first time use
 ;;;###autoload
 (when (and (boundp 'erc-modules)
-           (not (member 'hl-nicks 'erc-modules)))
+           (not (member 'hl-nicks erc-modules)))
   (add-to-list 'erc-modules 'hl-nicks))
 
 (provide 'erc-hl-nicks)
