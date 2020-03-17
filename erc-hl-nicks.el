@@ -4,7 +4,7 @@
 
 ;; Author: David Leatherman <leathekd@gmail.com>
 ;; URL: http://www.github.com/leathekd/erc-hl-nicks
-;; Version: 1.3.3
+;; Version: 1.3.4
 
 ;; This file is not part of GNU Emacs.
 
@@ -16,13 +16,23 @@
 
 ;; History
 
+;; 1.3.4
+;;
+;; - Pull request #13 - `erc-hl-nicks-refresh-colors' to refresh faces
+;;   Thanks thblt!
+
 ;; 1.3.3
 ;;
 ;; - Pull request #9 - switch from cl to cl-lib
+;;   Thanks jgkamat!
 
 ;; 1.3.2
 ;;
+;; - Pull request #6 - handle when `word-at-point' is nil
+;;   Thanks alezost!
+;;
 ;; - Pull request #7 - remove the list membership check on autoload
+;;   Thanks albertodonato!
 
 ;; 1.3.1
 ;;
