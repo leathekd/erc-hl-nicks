@@ -344,6 +344,13 @@
                   (erc-button-add-face (car bounds) (cdr bounds)
                                        (erc-hl-nicks-make-face trimmed)))))))))))
 
+(defun erc-hl-nicks-refresh-colors ()
+  "Recompute color for all nicks."
+  (interactive)
+  (save-excursion
+    (dolist (nick (hash-table-keys erc-hl-nicks-face-table))
+      (set-face-foreground (gethash nick erc-hl-nicks-face-table) (erc-hl-nicks-color-for-nick nick)))))
+
 (defun erc-hl-nicks-fix-hook-order (&rest _)
   (remove-hook 'erc-insert-modify-hook 'erc-hl-nicks)
   (add-hook 'erc-insert-modify-hook 'erc-hl-nicks t)
