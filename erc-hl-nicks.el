@@ -180,10 +180,10 @@
     (contrast . erc-hl-nicks-fix-color-contrast))
   "An alist of strategies available and their functions:
 
-  'invert - if the color is too dark/light to be seen based on the
+  \='invert - if the color is too dark/light to be seen based on the
   bg-mode (dark or light) of the frame, simply invert the color.
 
-  'contrast - attempt to achieve a decent contrast ratio (specified by
+  \='contrast - attempt to achieve a decent contrast ratio (specified by
   `erc-hl-nicks-minimum-contrast-ratio') by brightening or darkening
   the color")
 
@@ -192,7 +192,7 @@
   The options are listed in `erc-hl-nicks-color-contrast-strategies'
 
   This option can be a list and will be applied in the order defined.
-  That is, '(invert contrast) will invert as needed and then adjust
+  That is, \='(invert contrast) will invert as needed and then adjust
   the color as needed.")
 
 (defvar erc-hl-nicks-face-table
