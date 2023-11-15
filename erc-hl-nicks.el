@@ -126,54 +126,55 @@
 (require 'color)
 
 (defgroup erc-hl-nicks nil
-  "Highlighting nicknames in erc buffers"
+  "Highlighting nicknames in erc buffers."
   :group 'erc)
 
 (defcustom erc-hl-nicks-trim-nick-for-face t
-  "Ignore some characters when determining nick face"
+  "Ignore some characters when determining nick face."
   :group 'erc-hl-nicks
   :type 'boolean)
 
 (defcustom erc-hl-nicks-ignore-chars ",`'_-"
-  "Characters at the end of a nick to ignore while highlighting"
+  "Characters at the end of a nick to ignore while highlighting."
   :group 'erc-hl-nicks
   :type 'string)
 
 (defcustom erc-hl-nicks-skip-nicks nil
-  "Nicks to skip when highlighting"
+  "Nicks to skip when highlighting."
   :group 'erc-hl-nicks
   :type '(repeat string))
 
 (defcustom erc-hl-nicks-skip-faces
   '("erc-notice-face" "erc-pal-face" "erc-fool-face")
-  "Faces to avoid overriding when highlighting"
+  "Faces to avoid overriding when highlighting."
   :group 'erc-hl-nicks
   :type  '(repeat string))
 
 (defface erc-hl-nicks-nick-base-face
   '((t nil))
-  "Base face used for highlighting nicks. (Before the nick
-  color is added)"
+  "Base face used for highlighting nicks.
+Nick color is added on top of this base."
   :group 'erc-hl-nicks)
 
 (defvar erc-hl-nicks-minimum-luminence 85
-  "The threshold to invert when the background-mode is dark")
+  "The threshold to invert when the background-mode is dark.")
 
 (defvar erc-hl-nicks-maximum-luminence 170
-  "The threshold to invert when the background-mode is light")
+  "The threshold to invert when the background-mode is light.")
 
 (defvar erc-hl-nicks-bg-color (cdr (assoc 'background-color (frame-parameters)))
-  "The background color to use when calculating the contrast. This var is
-  exposed so it can be manually set in the case of terminal emacs (which doesn't
-  necessarily know the bg color).")
+  "The background color to use when calculating the contrast.
+This var is exposed so it can be manually set in the case of
+terminal Emacs (which doesn't necessarily know the bg color).")
 
 (defvar erc-hl-nicks-minimum-contrast-ratio 3.5
   "The amount of contrast desired between the buffer background color
-  and the foreground color chosen by erc-hl-nicks. The higher the
-  number the greater the contrast. A high number on a dark background
-  would make all of the nicks appear in pastel/washed-out colors while
-  on a dark background they may appear close to black. Somewhere
-  between 3.0 and 4.5 seems to be the sweet spot.")
+and the foreground color chosen by erc-hl-nicks. The higher the
+number the greater the contrast. A high number on a dark
+background would make all of the nicks appear in
+pastel/washed-out colors while on a dark background they may
+appear close to black. Somewhere between 3.0 and 4.5 seems to be
+the sweet spot.")
 
 (defvar erc-hl-nicks-color-contrast-strategies
   '((invert . erc-hl-nicks-invert-for-visibility)
@@ -189,11 +190,11 @@
 
 (defvar erc-hl-nicks-color-contrast-strategy 'invert
   "How should erc-hl-nicks attempt to make the nick colors visible?
-  The options are listed in `erc-hl-nicks-color-contrast-strategies'
+The options are listed in `erc-hl-nicks-color-contrast-strategies'.
 
-  This option can be a list and will be applied in the order defined.
-  That is, \='(invert contrast) will invert as needed and then adjust
-  the color as needed.")
+This option can be a list and will be applied in the order defined.
+That is, \='(invert contrast) will invert as needed and then adjust
+the color as needed.")
 
 (defvar erc-hl-nicks-face-table
   (make-hash-table :test 'equal)
@@ -207,9 +208,9 @@
 
 (defun erc-hl-nicks-hexcolor-luminance (color)
   "Returns the luminance of color COLOR. COLOR is a string \(e.g.
-  \"#ffaa00\", \"blue\"\) `color-values' accepts. Luminance is a
-  value of 0.299 red + 0.587 green + 0.114 blue and is always
-  between 0 and 255."
+\"#ffaa00\", \"blue\"\) `color-values' accepts. Luminance is a
+value of 0.299 red + 0.587 green + 0.114 blue and is always
+between 0 and 255."
   (let* ((values (x-color-values color))
          (r (car values))
          (g (car (cdr values)))
@@ -217,7 +218,7 @@
     (floor (+ (* 0.299 r) (* 0.587 g) (* 0.114 b)) 256)))
 
 (defun erc-hl-nicks-invert-color (color)
-  "Returns the inverted color of COLOR."
+  "Return the inverted color of COLOR."
   (let* ((values (x-color-values color))
          (r (car values))
          (g (car (cdr values)))
@@ -226,7 +227,7 @@
             (- 65535 r) (- 65535 g) (- 65535 b))))
 
 (defun erc-hl-nicks-trim-irc-nick (nick)
-  "Removes instances of erc-hl-nicks-ignore-chars from both sides of NICK"
+  "Remove instances of `erc-hl-nicks-ignore-chars' from both sides of NICK."
   (let ((stripped (replace-regexp-in-string
                    (format "\\([%s]\\)+$" erc-hl-nicks-ignore-chars)
                    "" nick)))
@@ -235,7 +236,7 @@
      "" stripped)))
 
 (defun erc-hl-nicks-brightness-contrast (c1 c2)
-  "Determines the amount of contrast between C1 and C2"
+  "Determine the amount of contrast between C1 and C2."
   (let* ((l1 (erc-hl-nicks-hexcolor-luminance c1))
          (l2 (erc-hl-nicks-hexcolor-luminance c2))
          (d (if (< l1 l2) l1 l2))
@@ -244,9 +245,9 @@
 
 (defun erc-hl-nicks-fix-color-contrast (color)
   "Adjusts COLOR by blending it with white or black, based on
-  background-mode until there is enough contrast between COLOR and
-  the background color. See `erc-hl-nicks-minimum-contrast-ratio' to
-  adjust how far to blend the color."
+background-mode until there is enough contrast between COLOR and
+the background color. See `erc-hl-nicks-minimum-contrast-ratio' to
+adjust how far to blend the color."
   (if (and erc-hl-nicks-minimum-contrast-ratio
            (< 0 erc-hl-nicks-minimum-contrast-ratio))
       (cl-some
@@ -265,7 +266,7 @@
 
 (defun erc-hl-nicks-invert-for-visibility (color)
   "Inverts the given color based on luminence and background-mode
-  (dark or light)."
+(dark or light)."
   (let ((bg-mode (cdr (assoc 'background-mode (frame-parameters)))))
     (cond
      ((and (equal 'dark bg-mode)
@@ -280,7 +281,7 @@
 
 (defun erc-hl-nicks-color-for-nick (nick)
   "Get the color to use for the given nick by calculating the color
-  and applying the contrast strategies to it."
+and applying the contrast strategies to it."
   (let ((color (concat "#" (substring (md5 (downcase nick)) 0 12))))
     (cl-reduce
      (lambda (color strategy)
@@ -295,7 +296,7 @@
   (make-symbol (concat "erc-hl-nicks-nick-" nick "-face")))
 
 (defun erc-hl-nicks-make-face (nick)
-  "Create and cache a new face for the given nick"
+  "Create and cache a new face for NICK."
   (or (gethash nick erc-hl-nicks-face-table)
       (let ((color (erc-hl-nicks-color-for-nick nick))
             (new-nick-face (erc-hl-nicks-face-name nick)))
@@ -322,8 +323,8 @@
 
 ;;;###autoload
 (defun erc-hl-nicks-force-nick-face (nick color)
-  "Force nick highlighting to be a certain color for a nick. Both NICK and COLOR
-  should be strings."
+  "Force NICK to be highlighted with COLOR.
+Both NICK and COLOR should be strings."
   (let ((new-nick-face (erc-hl-nicks-face-name nick)))
     (copy-face 'erc-hl-nicks-nick-base-face new-nick-face)
     (set-face-foreground new-nick-face color)
@@ -339,7 +340,7 @@
 
 ;;;###autoload
 (defun erc-hl-nicks ()
-  "Retrieves a list of usernames from the server and highlights them"
+  "Retrieve a list of usernames from the server and highlight them."
   (save-excursion
     (with-syntax-table erc-button-syntax-table
       (let ((inhibit-field-text-motion t))
@@ -391,3 +392,7 @@
      (add-to-list 'erc-modules 'hl-nicks t)))
 
 ;;; erc-hl-nicks.el ends here
+
+;; Local Variables:
+;; sentence-end-double-space: nil
+;; End:
