@@ -4,7 +4,7 @@
 
 ;; Author: David Leatherman <leathekd@gmail.com>
 ;; URL: http://www.github.com/leathekd/erc-hl-nicks
-;; Version: 1.3.4
+;; Version: 1.3.5
 
 ;; This file is not part of GNU Emacs.
 
@@ -15,6 +15,11 @@
 ;; add to nicknames
 
 ;; History
+
+;; 1.3.5
+;;
+;; - Mark this package as obsolete now that it's part of Emacs.
+;;   Thanks all!
 
 ;; 1.3.4
 ;;
@@ -340,6 +345,7 @@
 ;;;###autoload
 (defun erc-hl-nicks ()
   "Retrieves a list of usernames from the server and highlights them"
+  (declare (obsolete "use the `nicks' module in ERC 5.6+ instead." "30.1"))
   (save-excursion
     (with-syntax-table erc-button-syntax-table
       (let ((inhibit-field-text-motion t))
