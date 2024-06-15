@@ -3,6 +3,7 @@
 ;; Copyright (C) 2011-2013  David Leatherman
 
 ;; Author: David Leatherman <leathekd@gmail.com>
+;; Deprecated-since: 30.1
 ;; URL: http://www.github.com/leathekd/erc-hl-nicks
 ;; Version: 1.3.5
 
