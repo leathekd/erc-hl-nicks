@@ -1,3 +1,24 @@
+* NOTICE
+
+*As of July 2023, [[https://github.com/leathekd/erc-hl-nicks/issues/15][erc-hl-nicks is now a part of ERC]]*!
+
+It won't be released bundled with Emacs until version 30.1 but is already in ERC
+available on the Emacs [[https://elpa.gnu.org/packages/erc.html][GNU ELPA]] repository.
+
+This repo should be considered depricated and will be archived once 
+the next version of ERC is released with Emacs but will be kept "live" 
+for now so the Melpa package isn't accidentally removed before the 
+new version is released.
+
+- [[https://git.savannah.gnu.org/cgit/emacs.git/tree/etc/ERC-NEWS?id=9bdc5c62#n33][ERC news]]
+- [[https://git.savannah.gnu.org/cgit/emacs.git/tree/lisp/erc/erc-nicks.el?id=9bdc5c62][New implementation]]
+
+Please don't report issues here for the new version and instead follow the instructions at
+[[https://www.gnu.org/software/emacs/manual/html_node/erc/Getting-Help-and-Reporting-Bugs.html][Getting Help and Reporting Bugs]]
+in the ERC manual.
+
+
+
 * erc-hl-nicks - ERC Module to Highlight Nicknames
 
 ** I already have a nickname highlighter, why should I switch?
