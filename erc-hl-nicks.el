@@ -3,18 +3,28 @@
 ;; Copyright (C) 2011-2013  David Leatherman
 
 ;; Author: David Leatherman <leathekd@gmail.com>
+;; Deprecated-since: 30.1
 ;; URL: http://www.github.com/leathekd/erc-hl-nicks
-;; Version: 1.3.4
+;; Version: 1.3.5
 
 ;; This file is not part of GNU Emacs.
 
 ;;; Commentary:
+
+;; This package is now a part of Emacs.  This version is considered
+;; deprecated.  Please use the `nicks' module in ERC 5.6+.  See the
+;; README from the repo for more information.
 
 ;; This file was originally erc-highlight-nicknames.  It was modified
 ;; to optionally ignore the uniquifying characters that IRC clients
 ;; add to nicknames
 
 ;; History
+
+;; 1.3.5
+;;
+;; - Mark this package as obsolete now that it's part of Emacs.
+;;   Thanks all!
 
 ;; 1.3.4
 ;;
@@ -340,6 +350,7 @@
 ;;;###autoload
 (defun erc-hl-nicks ()
   "Retrieves a list of usernames from the server and highlights them"
+  (declare (obsolete "use the `nicks' module in ERC 5.6+ instead." "30.1"))
   (save-excursion
     (with-syntax-table erc-button-syntax-table
       (let ((inhibit-field-text-motion t))
